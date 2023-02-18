@@ -1,5 +1,9 @@
 import scala.sys.process.Process
 
+/**
+ * Implements set of operations on git repository, passes the git parameters to GitVersions instance, which implements
+ * the actual versioning logic
+ */
 case class GitHandler() {
   lazy val versions:GitVersions = GitVersions(tags,describedTag,comment,isMainBranch,hash)
   def pushTagIfChanged(): Unit =

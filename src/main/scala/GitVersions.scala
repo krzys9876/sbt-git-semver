@@ -1,3 +1,20 @@
+/**
+ * The class implements the actual logic of finding the new version depending on git repo parameters
+ *
+ * @param tags A list of tags in git repository
+ *
+ * @param describedTag The tag for the current commit. It is used to check if the last commit is already tagged
+ *                     with the new version
+ *
+ * @param gitComment A comment to the current commit, used to find [next_major] or [next_minor] tokens that
+ *                   override default behaviour to calculate next patch
+ *
+ * @param isMainBranch Is the current branch the main branch or some other branch. Semantic versioning
+ *                     with the major.minor.patch patterns is applied only to the main/master branch,
+ *                     other branches get a suffix with the commit  hash followed by SNAPSHOT
+ *
+ * @param hash Current commit's hash, used for adding suffix to the version for non-main branch
+ */
 case class GitVersions(tags:List[String],describedTag:String,gitComment:String,isMainBranch:Boolean,hash:String) {
   val versions:List[GitVersion] = tags.flatMap(GitVersion.parse).sortWith(GitVersion.lt).reverse
   val current:GitVersion = versions.headOption.getOrElse(GitVersion.ZERO)
@@ -15,7 +32,7 @@ case class GitVersions(tags:List[String],describedTag:String,gitComment:String,i
   val next: GitVersion = (described, isMainBranch) match {
     case (Some(descVer), _) => descVer
     case (None, true) => bumped
-    case (None, false) => bumped.withSuffix((f"-$hash-SNAPSHOT"))
+    case (None, false) => bumped.withSuffix(f"-$hash-SNAPSHOT")
   }
   val isSame: Boolean = described.contains(next) || describedTag == next.toString
 }
@@ -32,6 +49,10 @@ case class GitVersion(major:Int, minor:Int, patch:Int,suffix:String="") {
   override def toString: String = f"$major.$minor.$patch$suffix"
 }
 
+/**
+ * A value object for a version matching semantic versioning principles (using major.minor.patch pattern)
+ * Implements 'next' and sorting logics
+ */
 object GitVersion {
   val pattern:String = "^\\d+.\\d+.\\d$"
   def parse(tag:String):Option[GitVersion] = if(tag.matches(pattern))
