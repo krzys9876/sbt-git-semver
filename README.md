@@ -54,10 +54,14 @@ I don't use it anyway :)
 
 To enable the plugin in your own sbt project, all you need is to add the following line to your _project/plugins.sbt_ file:
 
-    addSbtPlugin("org.kr.sbt" % "git-semver-mmp" % "0.1")
+    addSbtPlugin("org.kr.sbt" % "git-semver-mmp" % "1.0.0")
 
 Make sure to update the organization, plugin name and version, so they match the sbt file. In my case:
 
-    version := "0.1"
+    version := "1.0.0"
     organization := "org.kr.sbt"
     name := "git-semver-mmp"
+
+Bit before, if you want to use it locally, publish the plugin to your local Ivy repo:
+
+    sbt publishLocal

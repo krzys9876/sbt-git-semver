@@ -1,4 +1,4 @@
-version := "0.1"
+version := "1.0.0"
 sbtPlugin := true
 organization := "org.kr.sbt"
 name := "git-semver-mmp"
