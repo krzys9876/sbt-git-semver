@@ -36,32 +36,37 @@ There is only one command:
 
     sbt "gitSemverNextVersion version.txt"
 
-where file name, where the new version number is stored, is optional. 
+The file name, where the new version number is stored, is optional. 
 I need this in my CI/CD scripts to save version number to other audit repo.
 
-This is all it does:
+This is what it does:
 
 1. checks all tags matching the m.m.p pattern
 2. checks if the last commit is tagged, i.e. was the next version already determined and pushed
 3. calculates next version
 
-The next version is a next patch by default. You can add _[next_major]_  or  _[next_minor]_ 
+The next version is the next patch by default. You can add _[next_major]_  or  _[next_minor]_ 
 to the commit message to bump major or minor version respectively.
 
-On main/master branch this is all, on other branches it adds a suffix: hash followed by _SNAPSHOT_ (just to follow the convention used by my colleagues). 
+On main/master branch this is all, on other branches it adds a suffix: hash followed by _SNAPSHOT_. 
 Sbt recognizes a snapshot version based on it and allows publishing it to different repository than a proper release. 
-I don't use it anyway :)
-
-To enable the plugin in your own sbt project, all you need is to add the following line to your _project/plugins.sbt_ file:
-
-    addSbtPlugin("org.kr.sbt" % "git-semver-mmp" % "1.0.0")
+I don't use it anyway ;) but it might be useful when using development branches.
 
 Make sure to update the organization, plugin name and version, so they match the sbt file. In my case:
 
     version := "1.0.0"
     organization := "org.kr.sbt"
     name := "git-semver-mmp"
+	
+Remember to include this in _build.sbt_ when compiling the plugin:
 
-Bit before, if you want to use it locally, publish the plugin to your local Ivy repo:
+    sbtPlugin := true
+
+If you want to use it locally, publish the plugin to your local Ivy repo:
 
     sbt publishLocal
+	
+To enable the plugin in your scala-sbt project, all you need is to add the following line to your _project/plugins.sbt_ file:
+
+    addSbtPlugin("org.kr.sbt" % "git-semver-mmp" % "1.0.0")
+	
