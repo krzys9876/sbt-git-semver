@@ -70,3 +70,21 @@ To enable the plugin in your scala-sbt project, all you need is to add the follo
 
     addSbtPlugin("org.kr.sbt" % "git-semver-mmp" % "1.0.0")
 	
+## Side note on ChatGPT
+
+I started to use CharGPT recently, at first out of curiosity, than as a supplement to web search and Stack Overflow.
+I asked it to write me a plugin that uses git tags in a m.m.p format to handle versioning. It was correct, precise and 
+very condensed (too condensed to me - a single object with all logics), but very useful to show me the concept of sbt plugins
+and git integration. I've read some other tutorials which helped me actually build the plugin (e.g. _sbtPlugin:=true_). 
+I did not specify all my requirements, because after initial exploration of results I just swiched to the code.
+
+As many of its users, I find ChatGPT to be an excellent tool for code snippets, application skeleton, 
+but obviously not for production code. I definitely prefer a TDD approach and evolving design instead of 
+using a large portion of generated code to fiddle with. But as a starting point and a tool to find explanations
+it's brilliant, so I'm sure I will be using it as one of handy tools to boost my productivity. 
+What I find difficult in working with ChatGPT is the necessity to specify exactly what I need in plain text,
+which sometimes takes more time that actually writing the code. Which leads me to a conclusion that our work as 
+software developers is not threatened by it, but quite conversely that as an industry we've just got
+a new great tool. We shuld just should use it wisely.
+
+
