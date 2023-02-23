@@ -52,39 +52,34 @@ On main/master branch this is all, on other branches it adds a suffix: hash foll
 Sbt recognizes a snapshot version based on it and allows publishing it to different repository than a proper release. 
 I don't use it anyway ;) but it might be useful when using development branches.
 
-Make sure to update the organization, plugin name and version, so they match the sbt file. In my case:
+The plugin is published to Central, so if you want to use it, add it to your project plugins in <code>project/plugins.sbt</code>:
 
-    version := "1.0.0"
-    organization := "org.kr.sbt"
-    name := "git-semver-mmp"
-	
-Remember to include this in _build.sbt_ when compiling the plugin:
+    addSbtPlugin("io.github.krzys9876" % "git-semver-mmp" % "1.0.0")
 
-    sbtPlugin := true
+If you want to play with the code, it is sufficient that your <code>build.sbt</code> includes just the following entries:
 
-If you want to use it locally, publish the plugin to your local Ivy repo:
+    version := "1.0"
+    sbtPlugin := true // NOTE: this is necessary for plugin to compile!
+    organization := "some.organization"
+    name := "some-name"
+    scalaVersion := "2.12.17"
 
-    sbt publishLocal
-	
-To enable the plugin in your scala-sbt project, all you need is to add the following line to your _project/plugins.sbt_ file:
-
-    addSbtPlugin("org.kr.sbt" % "git-semver-mmp" % "1.0.0")
-	
 ## Side note on ChatGPT
 
 I started to use CharGPT recently, at first out of curiosity, than as a supplement to web search and Stack Overflow.
 I asked it to write me a plugin that uses git tags in a m.m.p format to handle versioning. It was correct, precise and 
 very condensed (too condensed to me - a single object with all logics), but very useful to show me the concept of sbt plugins
-and git integration. I've read some other tutorials which helped me actually build the plugin (e.g. _sbtPlugin:=true_). 
-I did not specify all my requirements, because after initial exploration of results I just swiched to the code.
+and git integration. I've read some other tutorials which helped me actually build the plugin 
+(e.g. <code>sbtPlugin:=true</code>). I did not specify all my requirements, because after initial exploration of results 
+I just switched to the code.
 
 As many of its users, I find ChatGPT to be an excellent tool for code snippets, application skeleton, 
 but obviously not for production code. I definitely prefer a TDD approach and evolving design instead of 
-using a large portion of generated code to fiddle with. But as a starting point and a tool to find explanations
+using a large portions of generated code to fiddle with. As a starting point and a tool to find explanations
 it's brilliant, so I'm sure I will be using it as one of handy tools to boost my productivity. 
 What I find difficult in working with ChatGPT is the necessity to specify exactly what I need in plain text,
 which sometimes takes more time that actually writing the code. Which leads me to a conclusion that our work as 
 software developers is not threatened by it, but quite conversely that as an industry we've just got
-a new great tool. We shuld just should use it wisely.
+a new great tool. We should just should use it wisely.
 
 
