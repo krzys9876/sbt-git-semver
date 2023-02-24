@@ -54,7 +54,7 @@ case class GitVersion(major:Int, minor:Int, patch:Int,suffix:String="") {
  * Implements 'next' and sorting logics
  */
 object GitVersion {
-  private val pattern:String = "^\\d+.\\d+.\\d$"
+  private val pattern:String = "^\\d+.\\d+.\\d+$"
   def parse(tag:String):Option[GitVersion] = if(tag.matches(pattern))
     tag.split('.') match {
       case Array(major,minor,patch) => Some(GitVersion(major.toInt,minor.toInt,patch.toInt))

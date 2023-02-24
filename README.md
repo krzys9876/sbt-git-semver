@@ -57,7 +57,7 @@ I need this in my CI/CD scripts to save version number to other audit repo.
 
 The plugin is published to Central, so if you want to use it, add it to your project plugins in <code>project/plugins.sbt</code>:
 
-    addSbtPlugin("io.github.krzys9876" % "git-semver-mmp" % "1.1.0")
+    addSbtPlugin("io.github.krzys9876" % "git-semver-mmp" % "1.1.1")
 
 If you want to play with the code, it is sufficient that your <code>build.sbt</code> includes just the following entries:
 

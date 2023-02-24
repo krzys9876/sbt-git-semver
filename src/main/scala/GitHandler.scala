@@ -17,7 +17,7 @@ case class GitHandler(overrideVersionType:Option[VersionType]=None,repoPath:Opti
 
   private lazy val comment: String = Process("git log -1 --pretty=%B",repoPath).lineStream_!.toList.mkString(" ")
   private lazy val tags: List[String] = {
-    Process("git pull --tags",repoPath).! // this makes sense only on master...
+    Process("git fetch --tags",repoPath).!
     Process("git tag",repoPath).lineStream_!.toList
   }
   private lazy val describedTag: String = Process("git describe --tags",repoPath).lineStream_!.toList.headOption.getOrElse("")

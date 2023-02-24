@@ -31,26 +31,21 @@ object GitSemverPlugin extends AutoPlugin {
    *  The GitHandler instance is used to initialize GitVersions with repo parameters and determine the next version
    */
   override def projectSettings: Seq[Def.Setting[?]] = Seq(
-    gitSemverNextVersion := {
-      handleCommand(GitHandler(),spaceDelimited("<arg>").parsed.headOption,Some(streams.value.log))
-    },
-    gitSemverNextVersionMain := {
-      handleCommand(GitHandler(Some(VersionType.MAIN)), spaceDelimited("<arg>").parsed.headOption,Some(streams.value.log))
-    },
-    gitSemverNextVersionSnapshot := {
-      handleCommand(GitHandler(Some(VersionType.SNAPSHOT)), spaceDelimited("<arg>").parsed.headOption,Some(streams.value.log))
-    }
-  )
+    gitSemverNextVersion :=
+      handleCommand(GitHandler(),spaceDelimited("<arg>").parsed.headOption,Some(streams.value.log)),
+    gitSemverNextVersionMain :=
+      handleCommand(GitHandler(Some(VersionType.MAIN)), spaceDelimited("<arg>").parsed.headOption,Some(streams.value.log)),
+    gitSemverNextVersionSnapshot :=
+      handleCommand(GitHandler(Some(VersionType.SNAPSHOT)), spaceDelimited("<arg>").parsed.headOption,Some(streams.value.log)))
+
   def handleCommand(handler:GitHandler,filename:Option[String],log:Option[ManagedLogger],doPush:Boolean=true):Unit = {
     val nextVersion = handler.nextVersion
     log.foreach(_.info(nextVersion.toString))
     saveToFile(handler.repoPath,nextVersion.toString,filename)
     handler.pushTagIfChanged(doPush)
   }
-
   private def saveToFile(repoPath:Option[File],version:String,fileName:Option[String]):Unit = {
     val actualPath=repoPath.map(_.getAbsolutePath).getOrElse("")
     fileName.foreach(f => Files.write( Paths.get(actualPath,f), version.getBytes(StandardCharsets.UTF_8)))
   }
-
 }

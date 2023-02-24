@@ -5,13 +5,24 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
   Feature("decode version from git tags using semantic versioning pattern of: major.minor.patch") {
     Scenario("read and decode list of correct tags") {
       Given("unsorted list of correct tags")
-      val tags=List("0.0.1","0.0.2","0.1.2","1.1.5","1.1.3")
+      val tags=List("0.0.1","0.0.2","0.1.2","1.11.15","12.10.15","1.1.3")
       When("parsed")
       val versions=GitVersions(tags)
       Then("all tags are decoded and sorted")
-      val expected=List(GitVersion(1,1,5),GitVersion(1,1,3),GitVersion(0,1,2),GitVersion(0,0,2),GitVersion(0,0,1))
+      val expected=List(GitVersion(12,10,15),GitVersion(1,11,15),GitVersion(1,1,3),GitVersion(0,1,2),GitVersion(0,0,2),GitVersion(0,0,1))
       assert(versions.versions == expected)
-      assert(versions.current == GitVersion(1,1,5))
+      assert(versions.current == GitVersion(12,10,15))
+    }
+    Scenario("read and decode list of correct tags (large numbers)") {
+      Given("unsorted list of correct tags")
+      val tags = List("0.0.10001", "0.0.10002", "0.99999.2", "1234567890.11.1500", "1234567891.10.15", "1999999.1.3")
+      When("parsed")
+      val versions = GitVersions(tags)
+      Then("all tags are decoded and sorted")
+      val expected = List(GitVersion(1234567891, 10, 15), GitVersion(1234567890, 11, 1500), GitVersion(1999999, 1, 3),
+        GitVersion(0, 99999, 2), GitVersion(0, 0, 10002), GitVersion(0, 0, 10001))
+      assert(versions.versions == expected)
+      assert(versions.current == GitVersion(1234567891, 10, 15))
     }
     Scenario("read and decode list of incorrect tags") {
       Given("unsorted list containing incorrect tags")
