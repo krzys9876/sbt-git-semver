@@ -1,6 +1,6 @@
 name := "git-semver-mmp"
 ThisBuild / sbtPlugin := true
-ThisBuild / version := "1.0.0"
+ThisBuild / version := "1.1.0"
 ThisBuild / versionScheme := Some("early-semver")
 
 scalaVersion := "2.12.17" // consistent with version used by sbt 1.8.2

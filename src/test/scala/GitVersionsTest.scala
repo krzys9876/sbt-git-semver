@@ -73,7 +73,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("untagged commit on main branch") {
       Given("git repo with untagged commit on main branch and existing tags")
       val tags=List("0.0.1","0.0.2","2.1.2","1.1.6","1.1.3")
-      val versions=GitVersions(tags,"none","some comment",isMainBranch = true,"abcd")
+      val versions=GitVersions(tags,"none","some comment",VersionType.MAIN,"abcd")
       When("next version is determined")
       val next=versions.next
       Then("it is the next patch for current version")
@@ -82,7 +82,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("properly tagged commit on main branch") {
       Given("git repo with properly tagged commit on main branch and existing tags")
       val tags = List("0.0.1", "0.0.2", "2.1.2", "1.1.6", "1.1.3")
-      val versions = GitVersions(tags, "2.1.2", "some comment", isMainBranch = true, "abcd")
+      val versions = GitVersions(tags, "2.1.2", "some comment", VersionType.MAIN, "abcd")
       When("next version is determined")
       val next = versions.next
       Then("it is the current version")
@@ -92,7 +92,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("commit tagged with earlier number on main branch") {
       Given("git repo with properly tagged commit on main branch and existing tags")
       val tags = List("0.0.1", "0.0.2", "2.1.2", "1.1.6", "1.1.3")
-      val versions = GitVersions(tags, "1.1.6", "some comment", isMainBranch = true, "abcd")
+      val versions = GitVersions(tags, "1.1.6", "some comment", VersionType.MAIN, "abcd")
       When("next version is determined")
       val next = versions.next
       Then("it is the current version even if it is earlier number")
@@ -101,7 +101,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("untagged commit on other branch") {
       Given("git repo with properly tagged commit on other branch and existing tags")
       val tags = List("0.0.1", "0.0.2", "2.1.2", "1.1.6", "1.1.3")
-      val versions = GitVersions(tags, "none", "some comment", isMainBranch = false, "QWERTY")
+      val versions = GitVersions(tags, "none", "some comment", VersionType.SNAPSHOT, "QWERTY")
       When("next version is determined")
       val next = versions.next
       Then("it is the next patch for current version with hash and suffix")
@@ -110,7 +110,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("properly tagged commit on other branch (no commit since last plugin run)") {
       Given("git repo with properly tagged commit on other branch and existing tags")
       val tags = List("0.0.1", "0.0.2", "2.1.2", "1.1.6", "1.1.3")
-      val versions = GitVersions(tags, "2.1.3-abcd-SNAPSHOT", "some comment", isMainBranch = false, "abcd")
+      val versions = GitVersions(tags, "2.1.3-abcd-SNAPSHOT", "some comment", VersionType.SNAPSHOT, "abcd")
       When("next version is determined")
       val next = versions.next
       Then("it is the current version")
@@ -120,7 +120,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("untagged commit on main branch with [next_major] in commit comment") {
       Given("git repo with untagged commit on main branch and existing tags and with [next_major] in comment")
       val tags = List("0.0.1", "0.0.2", "2.1.2", "1.1.6", "1.1.3")
-      val versions = GitVersions(tags, "none", "some [next_major] comment", isMainBranch = true, "abcd")
+      val versions = GitVersions(tags, "none", "some [next_major] comment", VersionType.MAIN, "abcd")
       When("next version is determined")
       val next = versions.next
       Then("it is the next major for current version")
@@ -129,7 +129,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("untagged commit on main branch with [next_minor] in commit comment") {
       Given("git repo with untagged commit on main branch and existing tags and with [next_minor] in comment")
       val tags = List("0.0.1", "0.0.2", "2.1.2", "1.1.6", "1.1.3")
-      val versions = GitVersions(tags, "none", "some [next_minor] comment", isMainBranch = true, "abcd")
+      val versions = GitVersions(tags, "none", "some [next_minor] comment", VersionType.MAIN, "abcd")
       When("next version is determined")
       val next = versions.next
       Then("it is the next minor for current version")
@@ -138,7 +138,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("untagged commit on other branch with [next_major] in commit comment") {
       Given("git repo with properly tagged commit on other branch and existing tags and with [next_major] in comment")
       val tags = List("0.0.1", "0.0.2", "2.1.2", "1.1.6", "1.1.3")
-      val versions = GitVersions(tags, "none", "some [next_major] comment", isMainBranch = false, "QWERTY")
+      val versions = GitVersions(tags, "none", "some [next_major] comment", VersionType.SNAPSHOT, "QWERTY")
       When("next version is determined")
       val next = versions.next
       Then("it is the next patch for current version with hash and suffix")
@@ -147,7 +147,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("untagged commit on other branch with [next_minor] in commit comment") {
       Given("git repo with properly tagged commit on other branch and existing tags and with [next_minor] in comment")
       val tags = List("0.0.1", "0.0.2", "2.1.2", "1.1.6", "1.1.3")
-      val versions = GitVersions(tags, "none", "some [next_minor] comment", isMainBranch = false, "QWERTY")
+      val versions = GitVersions(tags, "none", "some [next_minor] comment", VersionType.SNAPSHOT, "QWERTY")
       When("next version is determined")
       val next = versions.next
       Then("it is the next patch for current version with hash and suffix")
@@ -156,7 +156,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("no tags on main branch") {
       Given("git repo w/o tags on main branch")
       val tags = List()
-      val versions = GitVersions(tags, "none", "some comment", isMainBranch = true, "QWERTY")
+      val versions = GitVersions(tags, "none", "some comment", VersionType.MAIN, "QWERTY")
       When("next version is determined")
       val next = versions.next
       Then("it is 0.0.0")
@@ -165,7 +165,7 @@ class GitVersionsTest extends AnyFeatureSpec with GivenWhenThen {
     Scenario("no tags on other branch") {
       Given("git repo w/o tags on main branch")
       val tags = List()
-      val versions = GitVersions(tags, "none", "some comment", isMainBranch = false, "QWERTY")
+      val versions = GitVersions(tags, "none", "some comment", VersionType.SNAPSHOT, "QWERTY")
       When("next version is determined")
       val next = versions.next
       Then("it is 0.0.0 with hash and suffix")
