@@ -55,7 +55,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       Then("version is 0.0.0")
       assertSnapshot("0.0.0",readVersionFile(repoDir))
     }
-  }
+  }	
 
   Feature("consecutive commits to main") {
     Scenario("next patch, minor and major on main") {
@@ -63,27 +63,27 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       val repoDir = createRepoWithSingleCommitToMain("t5")
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       When("a commit is made (w/o next_minor or next_major")
-      Process("git commit -a -m \"second commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'second_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is 0.0.1")
       assert(readVersionFile(repoDir) == "0.0.1")
       When("a commit is made with [next_minor]")
-      Process("git commit -a -m \"bump minor [next_minor] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'bump_minor_[next_minor]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is 0.1.0")
       assert(readVersionFile(repoDir) == "0.1.0")
       When("a commit is made (w/o next_minor or next_major")
-      Process("git commit -a -m \"bump patch commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'bump_patch_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is 0.1.1")
       assert(readVersionFile(repoDir) == "0.1.1")
       When("a commit is made with [next_major]")
-      Process("git commit -a -m \"bump major [next_major] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'bump_major_[next_major]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is 1.0.0")
       assert(readVersionFile(repoDir) == "1.0.0")
       When("a commit is made (w/o next_minor or next_major")
-      Process("git commit -a -m \"bump patch commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'bump_patch_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is 1.0.1")
       assert(readVersionFile(repoDir) == "1.0.1")
@@ -91,7 +91,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
     Scenario("bump version without a commit on main") {
       Given("a repository with initial version of 0.1.0")
       val repoDir = createRepoWithVersion001("t6")
-      Process("git commit -a -m \"bump minor [next_minor] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'bump_minor_[next_minor]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       assert(readVersionFile(repoDir) == "0.1.0")
       When("a sbt command is executed several times with different options (w/o any commit)")
@@ -107,7 +107,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       Given("a repository with initial version of 0.0.1")
       val repoDir = createRepoWithVersion001("t7")
       When("a command is executed with snapshot parameter")
-      Process("git commit -a -m \"another commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'another_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(Some(VersionType.SNAPSHOT), Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is a snapshot of 0.0.2")
       assertSnapshot("0.0.2",readVersionFile(repoDir))
@@ -116,7 +116,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       Given("a repository with initial version of 0.0.1")
       val repoDir = createRepoWithVersion001("t8")
       When("a commit i made with [snapshot] parameter")
-      Process("git commit -a -m \"a forced [snapshot] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'a_forced_[snapshot]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is a snapshot of 0.0.2")
       assertSnapshot("0.0.2", readVersionFile(repoDir))
@@ -125,7 +125,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       Given("a repository with initial version of 0.0.1")
       val repoDir = createRepoWithVersion001("t9")
       When("a command is executed with main parameter")
-      Process("git commit -a -m \"another commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'another_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(Some(VersionType.MAIN), Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is 0.0.2 (no difference)")
       assert(readVersionFile(repoDir)=="0.0.2")
@@ -134,7 +134,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       Given("a repository with initial version of 0.0.1")
       val repoDir = createRepoWithVersion001("t10")
       When("a commit is made with [main] parameter")
-      Process("git commit -a -m \"a forced [main] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'a_forced_[main]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is 0.0.2 (no difference)")
       assert(readVersionFile(repoDir)=="0.0.2")
@@ -143,7 +143,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       Given("a repository with initial version of 0.0.1")
       val repoDir = createRepoWithVersion001("t11")
       When("a commit is made with [snapshot] parameter")
-      Process("git commit -a -m \"a forced [snapshot][next_minor] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'a_forced_[snapshot][next_minor]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is a snapshot of 0.1.0")
       assertSnapshot("0.1.0", readVersionFile(repoDir))
@@ -155,7 +155,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       val repoDir = createRepoWithVersion001("t12")
       Process("git checkout -b some_other_branch", repoDir.toFile).!
       When("a commit is made with [next_minor] parameter")
-      Process("git commit -a -m \"a [next_minor] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'a_[next_minor]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is a snapshot of 0.1.0")
       assertSnapshot("0.1.0", readVersionFile(repoDir))
@@ -165,7 +165,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       val repoDir = createRepoWithVersion001("t13")
       Process("git checkout -b some_other_branch", repoDir.toFile).!
       When("a commit is made with [next_major] parameter")
-      Process("git commit -a -m \"a [next_major] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'a_[next_major]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       Then("next version is a snapshot of 1.0.0")
       assertSnapshot("1.0.0", readVersionFile(repoDir))
@@ -174,7 +174,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
       Given("a repository with initial version of 0.0.1 and on branch")
       val repoDir = createRepoWithVersion001("t14")
       Process("git checkout -b some_other_branch", repoDir.toFile).!
-      Process("git commit -a -m \"bump minor [next_minor] commit\" --allow-empty", repoDir.toFile).!
+      Process("git commit -a -m 'bump_minor_[next_minor]_commit' --allow-empty", repoDir.toFile).!
       GitSemverPlugin.handleCommand(GitHandler(None, Some(repoDir.toFile)), Some(versionFile), None, doPush = false)
       assertSnapshot("0.1.0",readVersionFile(repoDir))
       assertSnapshot("0.1.0",readVersionFile(repoDir))
@@ -214,7 +214,8 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
     Process("git checkout -b some_branch", gitRepoDir.toFile).!
     createFile(gitRepoDir, "some_other_file.txt")
     Process("git add some_other_file.txt", gitRepoDir.toFile).!
-    Process("git commit some_other_file.txt -m \"new file on branch\"", gitRepoDir.toFile).!
+    //NOTE: spaces in message replaced with unserscores as this caused errors (as if Process ignored single and double quotes)
+    Process("git commit some_other_file.txt -m 'new_file_on_branch'", gitRepoDir.toFile).!
     gitRepoDir
   }
 
@@ -224,7 +225,7 @@ class GitVersionsIntegrationTest extends AnyFeatureSpec with GivenWhenThen with 
     Process("git add -A", gitRepoDir.toFile).!
     Process("git commit -a -m 'initial'", gitRepoDir.toFile).!
     GitSemverPlugin.handleCommand(GitHandler(None, Some(gitRepoDir.toFile)), Some(versionFile), None, doPush = false)
-    Process("git commit -a -m \"empty commit\" --allow-empty", gitRepoDir.toFile).!
+    Process("git commit -a -m 'empty_commit' --allow-empty", gitRepoDir.toFile).!
     GitSemverPlugin.handleCommand(GitHandler(None, Some(gitRepoDir.toFile)), Some(versionFile), None, doPush = false)
     gitRepoDir
   }

@@ -24,27 +24,20 @@ case class GitHandler(overrideVersionType:Option[VersionType]=None,repoPath:Opti
   private lazy val versionType:VersionType =
     overrideVersionType.getOrElse(
       versionTypeByComment.getOrElse(
-        if(isMainBranchCommand1 || isMainBranchCommand2 || isMainBranchCommand3) VersionType.MAIN
-        else VersionType.SNAPSHOT))
+        if(isMainBranch) VersionType.MAIN else VersionType.SNAPSHOT))
 
-  private def isMainBranchCommand1:Boolean = {
+  private def isMainBranch:Boolean = branchInfo.map(_.getOrElse("")).exists(List("main","master").contains)
+  private def branchInfo:List[Option[String]] = List(
     // from some thread on StackOverflow
-    val branch = Process("git symbolic-ref --short HEAD",repoPath).lineStream_!.headOption.getOrElse("")
-    List("main","master").contains(branch)
-  }
-  private def isMainBranchCommand2: Boolean = {
+    Process("git symbolic-ref --short HEAD",repoPath).lineStream_!.headOption,
     // in Jenkins (observed in one production environment, git 1.8) it returns: remotes/origin/master
-    val branch =
-      Process("git name-rev --name-only HEAD",repoPath).lineStream_!.headOption.getOrElse("")
-        .split('/').toList.lastOption.getOrElse("")
-    List("main", "master").contains(branch)
-  }
-  private def isMainBranchCommand3: Boolean = {
+    Process("git name-rev --name-only HEAD",repoPath).lineStream_!.headOption.getOrElse("").split('/').toList.lastOption,
     // starting from git 2.2
-    val branch =
-      Process("git branch --show-current",repoPath).lineStream_!.headOption.getOrElse("")
-    List("main", "master").contains(branch)
-  }
+    Process("git branch --show-current",repoPath).lineStream_!.headOption,
+    // Gitlab CI predefined variable
+    sys.env.get("CI_COMMIT_BRANCH")
+  )
+
   private def versionTypeByComment: Option[VersionType] = comment match {
     case c if c.contains("[main]") => Some(VersionType.MAIN)
     case c if c.contains("[snapshot]") => Some(VersionType.SNAPSHOT)
